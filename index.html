@@ -9,23 +9,23 @@
     
     <!-- Font Awesome CDN --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- Noto Sans KR 폰트 (선택 사항이지만, 따뜻한 느낌을 위해) --><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Noto Sans KR 폰트 --><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         /* 따뜻한 테마를 위한 커스텀 색상 */
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #fdfaf6; /* 매우 부드러운 베이지 배경 */
-            margin: 0; /* 기본 마진 제거 */
-            padding: 0; /* 기본 패딩 제거 */
+            background-color: #fdfaf6;
+            margin: 0;
+            padding: 0;
         }
         .slide-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio (9 / 16 * 100) */
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
             overflow: hidden;
-            background-color: #fffaf0; /* 슬라이드 배경 */
-            border-radius: 0.75rem; /* rounded-lg */
+            background-color: #fffaf0;
+            border-radius: 0.75rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             border: 1px solid #f3eade;
         }
@@ -36,34 +36,33 @@
             width: 100%;
             height: 100%;
             display: none; /* 슬라이드 숨기기 */
-            flex-direction: column; /* 기본 flex-direction 설정 */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem; /* p-8에 해당 */
+            padding: 2rem;
             text-align: center;
         }
         .slide.active {
             display: flex; /* 활성 슬라이드만 보이기 */
         }
         
-        /* 따뜻한 색상 팔레트 */
-        .text-warm-brown { color: #854d0e; } /* 메인 텍스트 (갈색) */
-        .text-soft-brown { color: #a16207; } /* 부제목 */
-        .bg-warm-orange { background-color: #fed7aa; } /* 강조 배경 */
+        /* ... (기존 색상 및 인포그래픽 스타일) ... */
+        .text-warm-brown { color: #854d0e; }
+        .text-soft-brown { color: #a16207; }
+        .bg-warm-orange { background-color: #fed7aa; }
         .bg-soft-green { background-color: #dcfce7; }
         .text-soft-green-dark { color: #166534; }
         .bg-soft-blue { background-color: #e0f2fe; }
         .text-soft-blue-dark { color: #075985; }
         
-        /* 인포그래픽 요소 */
         .info-box {
             background-color: white;
-            border-left: 5px solid #f97316; /* 따뜻한 오렌지색 */
+            border-left: 5px solid #f97316;
             padding: 1.5rem;
             border-radius: 0.5rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            width: 100%; /* 너비 조정 */
-            max-width: 48rem; /* 최대 너비 설정 */
+            width: 100%;
+            max-width: 48rem;
         }
         
         .step-circle {
@@ -75,73 +74,66 @@
             justify-content: center;
             font-weight: bold;
             color: white;
-            background-color: #ea580c; /* 진한 오렌지 */
+            background-color: #ea580c;
         }
         
-        .nav-button {
-            background-color: #fff;
-            color: #854d0e;
-            border: 1px solid #f3eade;
-            border-radius: 9999px; /* full */
-            width: 3.5rem;
-            height: 3.5rem;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-            display: flex; /* 중앙 정렬을 위해 */
-            align-items: center;
-            justify-content: center;
+        /* 클릭 네비게이션을 위한 투명 오버레이 스타일 */
+        .nav-overlay {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 10; /* 슬라이드 컨텐츠 위에 위치 */
+            /* background: rgba(0,0,0,0.05); */ /* 디버깅용 */
         }
-        .nav-button:hover {
-            background-color: #fffaf0;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        #leftNav {
+            left: 0;
+            cursor: w-resize; /* 서쪽(왼쪽) 화살표 커서 */
+        }
+        #rightNav {
+            right: 0;
+            cursor: e-resize; /* 동쪽(오른쪽) 화살표 커서 */
         }
 
-        /* --- PDF 인쇄용 스타일 (전면 수정) --- */
+
+        /* --- PDF 인쇄용 스타일 --- */
         @media print {
             @page {
                 size: A4 landscape;
                 margin: 0;
             }
-
-            /* 1. 모든 요소에 배경 그래픽 인쇄 강제 */
             * {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
 
-            /* 2. 네비게이션 버튼, 카운터 등 상호작용 요소 숨기기 */
-            .nav-button, #slideCounter, .flex.justify-center.items-center {
+            /* 인쇄 시 네비게이션 오버레이 숨기기 */
+            .nav-overlay {
                 display: none !important;
             }
             
-            /* 3. 본문 및 슬라이드 컨테이너 리셋 */
             body {
                 background-color: #ffffff !important;
                 margin: 0;
                 padding: 0;
             }
             .slide-container {
-                position: static !important; /* absolute/relative 해제 */
-                padding-top: 0 !important;   /* 16:9 비율 해제 */
+                position: static !important;
+                padding-top: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
                 width: 100% !important;
-                height: auto !important;     /* 높이 자동 */
+                height: auto !important;
                 overflow: visible !important;
             }
             
-            /* 4. [핵심] 모든 슬라이드를 강제로 표시하고 페이지 나누기 */
             .slide {
-                display: flex !important;         /* 숨김(none) 속성 무시 */
-                position: relative !important;   /* 위치(absolute) 속성 무시 */
-                width: 100vw !important;         /* 페이지 너비 100% */
-                height: 100vh !important;        /* 페이지 높이 100% */
+                display: flex !important;
+                position: relative !important;
+                width: 100vw !important;
+                height: 100vh !important;
                 overflow: hidden !important;
-                page-break-after: always !important; /* 각 슬라이드 후 페이지 나누기 */
-                
-                /* 기존 스타일 유지 (중앙 정렬 등) */
+                page-break-after: always !important;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
@@ -149,7 +141,6 @@
                 box-sizing: border-box; 
             }
             
-            /* 5. 마지막 슬라이드는 페이지 나누기 안함 */
             .slide:last-child {
                 page-break-after: auto !important;
             }
@@ -162,7 +153,7 @@
         
         <!-- 16:9 슬라이드 컨테이너 --><div class="slide-container">
             
-            <!-- Slide 1: 표지 (배경 URL 삭제, CSS 배경색으로 변경) --><div class="slide" style="background-color: #fffaf0;">
+            <!-- Slide 1: 표지 --><div class="slide" style="background-color: #fffaf0;">
                 <div class="bg-white/80 backdrop-blur-sm p-10 rounded-lg shadow-lg">
                     <h1 class="text-4xl md:text-5xl font-bold text-warm-brown mb-4">성경적 부모관과 훈육</h1>
                     <p class="text-2xl md:text-3xl text-soft-brown">마더와이즈 지혜 7주차</p>
@@ -505,7 +496,7 @@
                     </div>
                     <div class="w-full md:w-2/5 text-center p-8 bg-white rounded-lg shadow-lg">
                         <h3 class="text-3xl font-bold text-yellow-600 mb-4">② 기쁨</h3>
-                        <p class="text-2xl text-gray-700">진리 안에서 행하는 자녀를 보는<br><span class="font-bold">'영혼의 즐거움' (Delight)</span></p>
+                        <p class="text-2xl text-gray-700">진리 안에서 행하는 자녀를 보는<br><span class="font-bold">'영혼의 즐길움' (Delight)</span></p>
                     </div>
                 </div>
             </div>
@@ -568,16 +559,12 @@
                 <p class="text-2xl text-soft-brown">함께 기도하겠습니다</p>
             </div>
 
+            
+            <!-- 클릭 네비게이션을 위한 투명 오버레이 -->
+            <div id="leftNav" class="nav-overlay"></div>
+            <div id="rightNav" class="nav-overlay"></div>
 
-        </div> <!-- 16:9 컨테이너 끝 --><!-- 네비게이션 버튼 --><div class="flex justify-center items-center space-x-6 mt-6">
-            <button id="prevBtn" class="nav-button">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <span id="slideCounter" class="text-lg text-warm-brown font-semibold">1 / 40</span>
-            <button id="nextBtn" class="nav-button">
-                <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
+        </div> <!-- 16:9 컨테이너 끝 --><!-- 네비게이션 버튼 (삭제됨) -->
     </div>
 
     <script>
@@ -586,17 +573,19 @@
         let currentSlideIndex = 0;
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
-        const slideCounter = document.getElementById('slideCounter');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        
+        // 네비게이션 버튼 및 카운터 관련 코드 삭제
+        
+        // 클릭 네비게이션 오버레이 요소
+        const leftNav = document.getElementById('leftNav');
+        const rightNav = document.getElementById('rightNav');
+
 
         function showSlide(index) {
-            // 모든 슬라이드의 'active' 클래스를 제거하여 숨깁니다.
             if (slides && slides.length > 0) {
                  slides.forEach(slide => slide.classList.remove('active'));
             }
             
-            // 유효한 인덱스 범위 확인
             if (index >= totalSlides) {
                 currentSlideIndex = 0; // 마지막 슬라이드를 넘어가면 처음으로
             } else if (index < 0) {
@@ -605,31 +594,23 @@
                 currentSlideIndex = index;
             }
 
-            // 현재 슬라이드에 'active' 클래스를 추가하여 표시합니다.
-            // slides가 존재하고, 해당 인덱스의 slide가 존재할 때만 실행
             if (slides && slides[currentSlideIndex]) { 
                 slides[currentSlideIndex].classList.add('active');
             }
             
-            // 슬라이드 카운터 텍스트를 업데이트합니다.
-            // slideCounter가 존재할 때만 실행
-            if (slideCounter) { 
-                slideCounter.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
-            }
+            // 카운터 업데이트 코드 삭제
         }
 
-        // 이전 버튼 클릭 이벤트 리스너
-        // prevBtn이 존재할 때만 리스너 추가
-        if (prevBtn) { 
-            prevBtn.addEventListener('click', () => {
+        // 왼쪽 클릭 이벤트 리스너
+        if (leftNav) { 
+            leftNav.addEventListener('click', () => {
                 showSlide(currentSlideIndex - 1);
             });
         }
 
-        // 다음 버튼 클릭 이벤트 리스너
-        // nextBtn이 존재할 때만 리스너 추가
-        if (nextBtn) { 
-            nextBtn.addEventListener('click', () => {
+        // 오른쪽 클릭 이벤트 리스너
+        if (rightNav) { 
+            rightNav.addEventListener('click', () => {
                 showSlide(currentSlideIndex + 1);
             });
         }
@@ -639,13 +620,11 @@
             if (e.key === 'ArrowRight') {
                 showSlide(currentSlideIndex + 1);
             } else if (e.key === 'ArrowLeft') {
-                // 이전에 'currentSlide'로 잘못 작성되었던 버그 수정
                 showSlide(currentSlideIndex - 1); 
             }
         });
 
         // 페이지 로드 시 첫 번째 슬라이드를 표시합니다.
-        // totalSlides가 0보다 클 때만(즉, 슬라이드가 1개 이상일 때만) 실행
         if (totalSlides > 0) {
             showSlide(currentSlideIndex);
         } else {
